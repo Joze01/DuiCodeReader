@@ -38,6 +38,8 @@ dependencies {
     implementation 'io.fotoapparat:fotoapparat:2.7.0'
 
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-design:$anko_version" // For SnackBars
+
 
 
 }

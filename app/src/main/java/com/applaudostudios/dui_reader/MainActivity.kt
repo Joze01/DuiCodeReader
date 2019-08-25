@@ -17,6 +17,9 @@ import java.io.File
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
+import org.jetbrains.anko.alert
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -69,27 +72,22 @@ class MainActivity : AppCompatActivity() {
                     photo
                         ?.let {
 
-                            val options = FirebaseVisionBarcodeDetectorOptions.Builder()
-                                .setBarcodeFormats(
-                                    FirebaseVisionBarcode.FORMAT_ALL_FORMATS
-                                )
+                            val options = FirebaseVisionCloudTextRecognizerOptions.Builder()
+                                .setLanguageHints(Arrays.asList("en", "es"))
                                 .build()
+
 
                             val image = FirebaseVisionImage.fromBitmap(it.bitmap)
                             val detector = FirebaseVision.getInstance()
-                                .getVisionBarcodeDetector(options)
+                                .onDeviceTextRecognizer
 
-                            detector.detectInImage(image)
-                                .addOnSuccessListener { barcodes ->
-                                    for (barcode in barcodes) {
-                                    toast(barcode.rawValue.toString())
-                                    }
-
+                                detector.processImage(image)
+                                .addOnSuccessListener {
+                                    alert(it.text).show()
                                 }
-                                .addOnFailureListener {
-                                    toast("Error")
+                                .addOnFailureListener{
+                                    toast("FAIL")
                                 }
-
 
                         }
                         ?: Log.e("ERRPR", "Couldn't capture photo.")
