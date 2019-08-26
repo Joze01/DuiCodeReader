@@ -19,6 +19,7 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOption
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.longToast
 import java.util.*
 
 
@@ -79,14 +80,19 @@ class MainActivity : AppCompatActivity() {
 
                             val image = FirebaseVisionImage.fromBitmap(it.bitmap)
                             val detector = FirebaseVision.getInstance()
-                                .onDeviceTextRecognizer
+                                .getCloudTextRecognizer(options)
+
+
 
                                 detector.processImage(image)
                                 .addOnSuccessListener {
                                     alert(it.text).show()
                                 }
                                 .addOnFailureListener{
-                                    toast("FAIL")
+                                    longToast(it.message.toString())
+                                    Log.v("Failure",it.message.toString())
+                                    Log.v("FailureEx",it.toString())
+
                                 }
 
                         }
